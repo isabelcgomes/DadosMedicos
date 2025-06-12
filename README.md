@@ -54,7 +54,7 @@ Depois dessa primeira etapa, uma análise primária dos dados foi realizada com 
 |TPDISEC8| Tipo de diagnóstico secundário 8 | todos 0 | |
 |TPDISEC9| Tipo de diagnóstico secundário 9 | todos 0 | |
 
-A partir dos dados pré-trabalhados, realizou-se um processo de engenharia de atributos para avaliar a qualidade das informações trazidas por cada um dos atributos do conjunto de dados. Como resultado desse processo, foram removidas as colunas:
+A partir dos dados pré-trabalhados, realizou-se um processo de avaliação da qualidade dos dados em cada um dos atributos do conjunto de dados. Como resultado desse processo, foram removidas as colunas:
 
 | Nome da Coluna | Descrição | Tratamento | Nota |
 | -------------- | --------- | ---------- | ---- |
@@ -62,5 +62,43 @@ A partir dos dados pré-trabalhados, realizou-se um processo de engenharia de at
 | CEP | CEP do paciente | Coluna removida | Nível de detalhamento irrelevante para a análise |
 | MES_CMTP | Mês do processamento | Coluna removida | Identificador irrelevante para a análise ou para identificação |
 | NATUREZA | Natureza jurídica do hospital | Coluna removida | Redundância com coluna NAT_JUR e dado desatualizado |
+| SEQUENCIA | Sequencial da AIH na remessa | Coluna Removida | Identificação redundante com a coluna N_AIH e irrelevante para a análise |
+| REMESSA | Remessa de processamento da AIH | Coluna Removida | Identificação redundante com a coluna N_AIH e irrelevante para a análise |
 <!-- | CBOR | Ocupação do paciente de acordo com a Classificação Brasileira de Ocupações | Coluna removida | Identificador irrelevante para a análise ou para identificação | -->
 <!-- | DT_SAIDA | Data de saída | Coluna removida | Redundância com a coluna Quantidade de diárias. A coluna Quantidade de diárias traz um valor maior para a análise de dados porque não exige tratamento adicional para ser avaliada | -->
+
+
+# Definição do Projeto
+
+O objetivo da análise é propor melhorias no sistema de marcação de cirurgias eletivas para redução de filas. O atendimento dos pacientes em cirurgias eletivas é condicionado à quantidade de leitos disponíveis a internação da pessoa na preparação para a cirurgia e cuidados pós-operatórios. Existem duas principais variáveis que impactam na disponibilidade de leitos:
+
+- Dinheiro: para a compra de novos leitos, o que, entretanto, aumenta custos operacionais do sistema de saúde
+- Tempo de permanência no hospital: o que impacta na disponibilidade imediata do leito para o paciente futuro
+
+Visando a manutenção do equilíbrio financeiro do sistema único de saúde, a variável resposta da presente análise é a quantidade de diárias (QT_DIARIAS), de forma que, o problema da pesquisa se torna:
+
+_Quais as variáveis de maior impacto na quantidade de diárias que um paciente permanece em um hospital?_
+
+Para responder essa pergunta, algumas considerações iniciais foram realizadas:
+
+- Existem variáveis de alta correlação com a quantidade de diárias (QT_DIARIAS) que um paciente permanece em um hospital, entretanto, essas variáveis são influenciadas pela quantidade de diárias e não o contrário. Portanto, em uma primeira avaliação, foram removidas as variáveis:
+
+| Nome da Coluna | Descrição                      | Motivo da Remoção      | 
+| -------------- | ------------------------------ | ---------------------- |
+| DIAR_ACOM      | Quantidade de diárias do acompanhante do paciente | Quanto mais diárias um paciente tem em um hospital mais um acompanhante pode ficar no hospital com este, entretanto, sem a existência de um paciente não há acompanhantes e, portanto, não há diárias de acompanhantes |
+|VAL_SH| Valor de serviços hospitalares | Os custos da internação de uma pessoa não interferem na quantidade de diárias, mas a quantidade de diárias pode interferir nos custos de uma internação em uma relação diretamente proporcional |
+|VAL_SP| Valor de serviços profissionais | Os custos da internação de uma pessoa não interferem na quantidade de diárias, mas a quantidade de diárias pode interferir nos custos de uma internação em uma relação diretamente proporcional |
+|VAL_TOT| Valor total | Os custos da internação de uma pessoa não interferem na quantidade de diárias, mas a quantidade de diárias pode interferir nos custos de uma internação em uma relação diretamente proporcional |
+|US_TOT| Valor total em dólares | Os custos da internação de uma pessoa não interferem na quantidade de diárias, mas a quantidade de diárias pode interferir nos custos de uma internação em uma relação diretamente proporcional |
+|VAL_SH_FED| Valor do complemento federal de serviços hospitalares | Os custos da internação de uma pessoa não interferem na quantidade de diárias, mas a quantidade de diárias pode interferir nos custos de uma internação em uma relação diretamente proporcional |
+|VAL_SP_FED| Valor do complemento federal de serviços profissionais | Os custos da internação de uma pessoa não interferem na quantidade de diárias, mas a quantidade de diárias pode interferir nos custos de uma internação em uma relação diretamente proporcional |
+|VAL_SH_GES| Valor do complemento do gestor de serviços hospitalares | Os custos da internação de uma pessoa não interferem na quantidade de diárias, mas a quantidade de diárias pode interferir nos custos de uma internação em uma relação diretamente proporcional |
+|VAL_SP_GES| Valor do complemento do gestor de serviços profissionais | Os custos da internação de uma pessoa não interferem na quantidade de diárias, mas a quantidade de diárias pode interferir nos custos de uma internação em uma relação diretamente proporcional |
+|VAL_UCI| Valor de UCI | Os custos da internação de uma pessoa não interferem na quantidade de diárias, mas a quantidade de diárias pode interferir nos custos de uma internação em uma relação diretamente proporcional |
+
+A correlação entre cada uma das variáveis em relação à quantidade de dias (QT_DIARIAS) de internação do paciente pode ser observada na [Figura 1](#Figura_1)
+
+[Figura_1]: imagens\correlation_matrix_removal.png "Matriz de correlação entre as colunas removidas e a quantidade de diárias do paciente" 
+![Figura 1](imagens\correlation_matrix_removal.png)
+
+A [Figura 1](#Figura_1) indica uma alta correlação entre a quantidade de diárias do paciente e a quantidade de diárias do acompanhante e uma baixa correlação entre a quantidade de diárias do paciente e os custos associados à estadia deste. Não descarta-se, entretanto, uma possível relação entre a quantidade de diárias e os custos de internação, só indica-se que outros fatores, como o procedimento realizado, podem ter mais relação com os custos.
