@@ -103,6 +103,13 @@ A correlação entre cada uma das variáveis em relação à quantidade de dias 
 
 A [Figura 1](#Figura_1) indica uma alta correlação entre a quantidade de diárias do paciente e a quantidade de diárias do acompanhante e uma baixa correlação entre a quantidade de diárias do paciente e os custos associados à estadia deste. Não descarta-se, entretanto, uma possível relação entre a quantidade de diárias e os custos de internação, só indica-se que outros fatores, como o procedimento realizado, podem ter mais relação com os custos.
 
+Após essas análises, foi executado um modelo de predição para avaliar a possibilidade de prever o comportamento da quantidade de diárias com as variáveis do prontuário do paciente, entretanto, algumas das variáveis mais importantes não têm uma relação de causalidade com a quantidade de diárias ou são variáveis identificadoras com números arbitrários para a avaliação.
+
+[Figura_2]: imagens/shap_ruim.png "Importância entre as variáveis não muito adequadas e a quantidade de diárias do paciente" 
+![Figura 2](imagens/shap_ruim.png)
+
+A váriavel que, de acordo com o diagrama da [Figura 2](#Figura_2) mais impactaria na quantidade de diárias é o motivo da saída da pessoa do hospital, entretanto, essa variável é obtida a posteriori da saída e, portanto, não pode ser utilizada como predição. Outra variável irrelevante é o número do prontuário, um identificador aleatório e único para registrar o prontuário no sistema, variável que não representa relação qualquer de causalidade com a quantidade de diárias do paciente.
+
 Em conversas com representantes do ministério da saúde, entretanto, foram levantadas as variáveis com maior importância de negócio para a apreciação do problema de filas. Essas variáveis são:
 
 | Nome da Coluna | Descrição                      | 
@@ -130,19 +137,24 @@ Após isso, foi aplicado um modelo de Árvore de Decisão para a avaliação dos
 
 Os resultados deste modelo foram avaliados levando em consideração a importância de cada uma das variáveis na composição dos resultados. Para uma avaliação mais robusta, foi necessário separar os diagnósticos das demais variáveis, uma vez que estes não consistiram um valor de importância próximo o suficiente das demais variáveis para serem considerados no cálculo de Shapley-Values.
 
-Esse "irrelevância" aparente se dá pela variedade de diagnósticos. Com a possibilidade de 514 diagnósticos diferentes, a distribuição se torna esparsa e, com isso, dificulta a avaliação da importancia dos diagnósticos para a definição da quantidade de dias que o paciente ficará internado. Para uma avaliação mais precisa, primeiro avaliou-se as demais variáveis [Figura 2](#Figura_2) e, em seguida, fizemos uma avaliação dos diagnósticos [Figura 3](#Figura_3).
+Esse "irrelevância" aparente se dá pela variedade de diagnósticos. Com a possibilidade de 514 diagnósticos diferentes, a distribuição se torna esparsa e, com isso, dificulta a avaliação da importancia dos diagnósticos para a definição da quantidade de dias que o paciente ficará internado. Para uma avaliação mais precisa, primeiro avaliou-se as demais variáveis [Figura 3](#Figura_3). 
 
-[Figura_2]: imagens/shap_variaveis.png "Importância entre as variáveis e a quantidade de diárias do paciente" 
-![Figura 2](imagens/shap_variaveis.png)
+[Figura_3]: imagens/shap_variaveis.png "Importância entre as variáveis e a quantidade de diárias do paciente" 
+![Figura 3](imagens/shap_variaveis.png)
 
-[Figura_3]: imagens/shap_diagnosticos.png "Importância entre os diagnósticos e a quantidade de diárias do paciente" 
-![Figura 3](imagens/shap_diagnosticos.png)
+E, em seguida, fizemos uma avaliação dos diagnósticos [Figura 4](#Figura_4).
+
+[Figura_4]: imagens/shap_diagnosticos.png "Importância entre os diagnósticos e a quantidade de diárias do paciente" 
+![Figura 4](imagens/shap_diagnosticos.png)
 
 Por essa análise, foi possível avaliar que existem municípios com diárias de internações expressivamente maiores que outros, podendo indicar uma qualidade discrepante no atendimento entre diferentes municípios, uma superlotação maior ou um preparo maior da equipe do hospital, entretanto, a avaliação qualitativa desse resultado não é escopo atual deste projeto. Outra avaliação possível, que faz sentido com o significado das variáveis é que o procedimento realizado impacta diretamente na quantidade de diárias, isto é um indicativo da diferença de complexidades e tempos de pós-operatório de diferentes procedimentos cirúrgicos ou da maior taxa de complicações em diferentes procedimentos. 
 
-Além disso, pôde-se avaliar que o óbito não é um fator determinante para a quantidade de diárias dos pacientes, apesar de valores individuais terem um impacto relevante na avaliação, levando a avaliar que, em um contexto geral, o óbito não impacta na avaliação, mas que, para pacientes específicos impacta diretamente na quantidade de diárias, com a redução prematura das diárias devido o óbito do paciente.
+Além disso, pôde-se avaliar que o óbito não é um fator determinante para a quantidade de diárias dos pacientes, apesar de valores individuais terem um impacto relevante na avaliação [Figura 5](#Figura_5), levando a avaliar que, em um contexto geral, o óbito não impacta na avaliação, mas que, para pacientes específicos impacta diretamente na quantidade de diárias, com a redução prematura das diárias devido o óbito do paciente.
 
-Em relação aos diagnósticos 4 se destacaram na importância para determinação da quantidade de diárias, com alto impacto em valores individuais também. Foram eles: 
+[Figura_5]: imagens/ind_contribution_variaveis.png "Importância individual entre as variáveis e a quantidade de diárias do paciente" 
+![Figura 5](imagens/ind_contribution_variaveis.png)
+
+Em relação aos diagnósticos 4 se destacaram na importância para determinação da quantidade de diárias [Figura 4](#Figura_4), com alto impacto em valores individuais também [Figura 6](#Figura_6). Foram eles: 
 
 | CID10 | Descrição                      | 
 | -------------- | ------------------------------ |
@@ -150,3 +162,13 @@ Em relação aos diagnósticos 4 se destacaram na importância para determinaç�
 | Y831 |  Reação anormal em paciente ou complicação tardia, causadas por intervenção cirúrgica com implante de uma prótese interna, sem menção de acidente durante a intervenção |
 | V091 |  Pedestre traumatizado em um acidente não-de-trânsito não especificado |
 | W038 |  quedas no mesmo nível causadas por colisões ou empurrões de terceiros, em locais específicos não listados de forma detalhada |
+
+[Figura_6]: imagens/ind_contribution_diagnosticos.png "Importância individual entre os diagnósticos e a quantidade de diárias do paciente" 
+![Figura 6](imagens/ind_contribution_diagnosticos.png)
+
+# Próximas etapas
+
+- Avaliação estatística da árvore de decisão como modelo preditivo
+- Avaliação de outros modelos preditivos
+- Avaliação do valor total como variável resposta
+- Avaliação de outras variáveis importantes para a predição
