@@ -98,7 +98,55 @@ Para responder essa pergunta, algumas considerações iniciais foram realizadas:
 
 A correlação entre cada uma das variáveis em relação à quantidade de dias (QT_DIARIAS) de internação do paciente pode ser observada na [Figura 1](#Figura_1)
 
-[Figura_1]: imagens\correlation_matrix_removal.png "Matriz de correlação entre as colunas removidas e a quantidade de diárias do paciente" 
-![Figura 1](imagens\correlation_matrix_removal.png)
+[Figura_1]: imagens/correlation_matrix_removal.png "Matriz de correlação entre as colunas removidas e a quantidade de diárias do paciente" 
+![Figura 1](imagens/correlation_matrix_removal.png)
 
 A [Figura 1](#Figura_1) indica uma alta correlação entre a quantidade de diárias do paciente e a quantidade de diárias do acompanhante e uma baixa correlação entre a quantidade de diárias do paciente e os custos associados à estadia deste. Não descarta-se, entretanto, uma possível relação entre a quantidade de diárias e os custos de internação, só indica-se que outros fatores, como o procedimento realizado, podem ter mais relação com os custos.
+
+Em conversas com representantes do ministério da saúde, entretanto, foram levantadas as variáveis com maior importância de negócio para a apreciação do problema de filas. Essas variáveis são:
+
+| Nome da Coluna | Descrição                      | 
+| -------------- | ------------------------------ |
+|CEP| CEP de residência do paciente |
+|MUNIC_MOV| Município do hospital |
+|PROC_REA| Procedimento realizado |
+|DIAG_PRINC| Diagnóstico principal |
+|DIAGSEC1| Diagnóstico secundário 1 |
+|DIAGSEC2| Diagnóstico secundário 2 |
+|DIAGSEC3| Diagnóstico secundário 3 |
+|DIAGSEC4| Diagnóstico secundário 4 |
+|MORTE| Se houve óbito na cirurgia |
+|CNES| CNES do hospital	|
+|QT_DIARIAS| Quantidade de diárias do paciente |
+|VAL_TOT| Valor total investido no paciente |
+
+Como discutido previamente, o Valor Total não constitui uma relação de causalidade com a quantidade de diárias (apesar da quantidade de diárias consituir uma relação de causalidade com o valor total), dessa forma, para a análise de quantidade de diárias, esta variável foi descartada, entretanto, para a avaliação do valor total a variável quantidade de diárias é considerada uma variável preditora.
+
+A parte mais importante da realização do projeto é o entendimento das variáveis analisadas. Neste caso, diagnóstico, separado em 5 categorias, é uma variável peculiar participante da análise. para este caso, a categoria do diagnóstico, isso é, se o diagnóstico é principal, secundário 1, 2, 3 ou 4 não importa para a análise, o ponto importante é definir se o paciente tem ou não determinado diagnóstico em algum momento. Além disso, esta variável é textual e não pode ser diretamente convertida em números já que cada letra presente no valor do diagnóstico representa uma categoria diferente. Nesse caso, um processo de engenharia de atributo foi realizado, primeiro houve a tokenização, neste caso a indicação se em cada coluna existia determinado diagnóstico) e, em uma segunda etapa, a junção dos diagnósticos de todas as colunas, criando, assim, uma coluna para cada possível diagnóstico indicando se determinado paciente recebeu ou não este diagnóstico não importando se este foi principal ou secundário.
+
+Essa junção foi importante para reduzir a dimensionalidade dos dados após a tokenização destes atributos e possibilitar a execução do projeto.
+
+Após isso, foi aplicado um modelo de Árvore de Decisão para a avaliação dos dados. Este modelo foi escolhido por sua flexibilidade em termos de tipos e escalas de dados de entrada para a realização de uma classificação ou, neste caso, regressão. 
+
+Os resultados deste modelo foram avaliados levando em consideração a importância de cada uma das variáveis na composição dos resultados. Para uma avaliação mais robusta, foi necessário separar os diagnósticos das demais variáveis, uma vez que estes não consistiram um valor de importância próximo o suficiente das demais variáveis para serem considerados no cálculo de Shapley-Values.
+
+Esse "irrelevância" aparente se dá pela variedade de diagnósticos. Com a possibilidade de 514 diagnósticos diferentes, a distribuição se torna esparsa e, com isso, dificulta a avaliação da importancia dos diagnósticos para a definição da quantidade de dias que o paciente ficará internado. Para uma avaliação mais precisa, primeiro avaliou-se as demais variáveis [Figura 2](#Figura_2) e, em seguida, fizemos uma avaliação dos diagnósticos [Figura 3](#Figura_3).
+
+[Figura_2]: imagens/shap_variaveis.png "Importância entre as variáveis e a quantidade de diárias do paciente" 
+![Figura 2](imagens/shap_variaveis.png)
+
+[Figura_3]: imagens/shap_diagnosticos.png "Importância entre os diagnósticos e a quantidade de diárias do paciente" 
+![Figura 3](imagens/shap_diagnosticos.png)
+
+Por essa análise, foi possível avaliar que existem municípios com diárias de internações expressivamente maiores que outros, podendo indicar uma qualidade discrepante no atendimento entre diferentes municípios, uma superlotação maior ou um preparo maior da equipe do hospital, entretanto, a avaliação qualitativa desse resultado não é escopo atual deste projeto. Outra avaliação possível, que faz sentido com o significado das variáveis é que o procedimento realizado impacta diretamente na quantidade de diárias, isto é um indicativo da diferença de complexidades e tempos de pós-operatório de diferentes procedimentos cirúrgicos ou da maior taxa de complicações em diferentes procedimentos. 
+
+Além disso, pôde-se avaliar que o óbito não é um fator determinante para a quantidade de diárias dos pacientes, apesar de valores individuais terem um impacto relevante na avaliação, levando a avaliar que, em um contexto geral, o óbito não impacta na avaliação, mas que, para pacientes específicos impacta diretamente na quantidade de diárias, com a redução prematura das diárias devido o óbito do paciente.
+
+Em relação aos diagnósticos 4 se destacaram na importância para determinação da quantidade de diárias, com alto impacto em valores individuais também. Foram eles: 
+
+| CID10 | Descrição                      | 
+| -------------- | ------------------------------ |
+| W019 |  Queda no mesmo nível por escorregão, tropeção ou passos em falsos em local não especificado |
+| Y831 |  Reação anormal em paciente ou complicação tardia, causadas por intervenção cirúrgica com implante de uma prótese interna, sem menção de acidente durante a intervenção |
+| V091 |  Pedestre traumatizado em um acidente não-de-trânsito não especificado |
+| W038 |  quedas no mesmo nível causadas por colisões ou empurrões de terceiros, em locais específicos não listados de forma detalhada |
