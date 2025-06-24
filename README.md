@@ -129,7 +129,7 @@ Em conversas com representantes do ministério da saúde, entretanto, foram leva
 
 Como discutido previamente, o Valor Total não constitui uma relação de causalidade com a quantidade de diárias (apesar da quantidade de diárias consituir uma relação de causalidade com o valor total), dessa forma, para a análise de quantidade de diárias, esta variável foi descartada, entretanto, para a avaliação do valor total a variável quantidade de diárias é considerada uma variável preditora.
 
-A parte mais importante da realização do projeto é o entendimento das variáveis analisadas. Neste caso, diagnóstico, separado em 5 categorias, é uma variável peculiar participante da análise. para este caso, a categoria do diagnóstico, isso é, se o diagnóstico é principal, secundário 1, 2, 3 ou 4 não importa para a análise, o ponto importante é definir se o paciente tem ou não determinado diagnóstico em algum momento. Além disso, esta variável é textual e não pode ser diretamente convertida em números já que cada letra presente no valor do diagnóstico representa uma categoria diferente. Nesse caso, um processo de engenharia de atributo foi realizado, primeiro houve a tokenização, neste caso a indicação se em cada coluna existia determinado diagnóstico) e, em uma segunda etapa, a junção dos diagnósticos de todas as colunas, criando, assim, uma coluna para cada possível diagnóstico indicando se determinado paciente recebeu ou não este diagnóstico não importando se este foi principal ou secundário.
+A parte mais importante da realização do projeto é o entendimento das variáveis analisadas. Neste caso, diagnóstico, separado em 5 categorias, é uma variável peculiar participante da análise. para este caso, a categoria do diagnóstico, isso é, se o diagnóstico é principal, secundário 1, 2, 3 ou 4 não importa para a análise, o ponto importante é definir se o paciente tem ou não determinado diagnóstico em algum momento. Além disso, esta variável é textual e não pode ser diretamente convertida em números já que cada letra presente no valor do diagnóstico representa uma categoria diferente. Nesse caso, um processo de engenharia de atributo foi realizado, primeiro houve a tokenização, neste caso a indicação se em cada coluna existia determinado diagnóstico e, em uma segunda etapa, a junção dos diagnósticos de todas as colunas, criando, assim, uma coluna para cada possível diagnóstico indicando se determinado paciente recebeu ou não este diagnóstico não importando se este foi principal ou secundário.
 
 Essa junção foi importante para reduzir a dimensionalidade dos dados após a tokenização destes atributos e possibilitar a execução do projeto.
 
@@ -165,6 +165,61 @@ Em relação aos diagnósticos 4 se destacaram na importância para determinaç�
 
 [Figura_6]: imagens/ind_contribution_diagnosticos.png "Importância individual entre os diagnósticos e a quantidade de diárias do paciente" 
 ![Figura 6](imagens/ind_contribution_diagnosticos.png)
+
+# Avaliação de um modelo de predição
+
+Durante os testes dos modelos de predição, foi determinado que o algoritmo de árvore de decisão não atingiu uma performance interessante para a escolha deste como modelo de previsão de quantidade de diárias em hospitais, dessa forma, a relação das próximas etapas previstas contou também com a avaliação do Gaussian Naive Bayes como método de previsão de quantidade de diárias de um paciente de cirurgia eletiva em um hospital.
+
+Nesse caso, entende-se que o problema, em realidade, se trata de uma classificação, uma vez que, nos dados analisados, a quantidade de dias não é contínua, e sim, um problema de classificação múltipla. 
+
+A escolha de um modelo mais apropriado e uma avaliação melhor do tipo de problema foi realizada após a avaliação do coeficiente de determinação e sua comparação entre as performances, no mesmo dataset de treino e teste, dos algoritmos:
+
+| Algoritmo | Score |
+| Árvore de Decisão | 0.03 |
+| KNN | 0.05 |
+| Naive Bayes | 0.6 |
+| SVM | 0.1 |
+
+A partir destes resultados de coeficiente de determinação, foi escolhido o algoritmo de Naive Bayes para prosseguir com o experimento realizado em um primeiro momento, que, por definição, é um modelo de classificação.
+
+# Revalidação do coeficiente de importância para as variáveis do dataset
+
+Com a escolha de um novo modelo, foi necessária a reavaliação das importâncias do modelo.
+
+Para as variáveis gerais, a importância se manteve entre as variáveis, indicando que pode existir uma ocorrência maior de internações mais longas ou mais curtas a depender do múnicípio de residência do paciente, do local de seu atendimento e do procedimento realizado [Figura 7](#Figura_7).
+
+[Figura_7]: imagens/shap_variaveis_NB.png "Importância entre as variáveis e a quantidade de diárias do paciente" 
+![Figura 7](imagens/shap_variaveis_NB.png)
+
+Adicionalmente, para cada uma dessas variáveis foram análisados os valores que mais impactam na quantidade de diárias [Figura 8](#Figura_8).
+
+[Figura_8]: imagens/ind_contribution_variaveis_NB_valores_mais_importantes.png "Importância específica entre as variáveis e a quantidade de diárias do paciente" 
+![Figura 8](imagens/ind_contribution_variaveis_NB_valores_mais_importantes.png)
+
+A partir desta avaliação, é possível extrair que o procedimento de código 407020276 (FISTULECTOMIA) tem um maior impacto na quantidade de diárias que demais procedimentos. Esse impacto se dá na simplicidade do procedimento que gera diárias menores entre 0 e 5 dias [Figura 9](#Figura_9).
+
+[Figura_9]: imagens/distribuicao_fistulectomia.png "Distribuição de quantidade de diárias para o procedimento FISTULECTOMIA" 
+![Figura 9](imagens/distribuicao_fistulectomia.png)
+
+Existe, entretanto, um caso no qual o paciente ficou 32 dias internado devido a realização deste [Figura 9](#Figura_9), analisando os dados disponíveis não foi encontrado nenhum motivo para a ocorrência desta anormalidade, indicando que algo pode ter acontecido com o paciente que não consta no relatório médico ou o esquecimento de realizar o procedimento de alta ao paciente.
+
+Em relação aos diagnósticos, foi necessário realizar uma divisão entre diagnóstico principal e diagnósticos secundários pela alta complexidade computacional de processar o grau de importância de variáveis para o algoritmo de Naive Bayes. 
+
+Antes de realizar essa avaliação, buscou-se o entendimento dos diagnósticos préviamente identificados com a maior importância para buscar elucidar os padrões existentes entre estes e a quantidade de diárias do paciente. Após essa avaliação, foi identificado que a ocorrência de todos os diagnósticos entendidos como mais importantes, acontecem como diagnósticos secundários como qualificadores, ou seja, grupos, de diagnósticos principais e, com isso, esses diagnósticos sozinhos não indicam uma relação forte de causalidade com o tempo de internação do paciente.
+
+Um exemplo dessa análise foi a apreciação de quais diagnósticos principais corresponderiam aos diagnósticos secundários mais importantes, entre eles o diagnóstico S720 de fratura no colo do fêmur com uma mediana de 7 diárias no hospital, 7 vezes maior do que a mediana geral de uma diária e média de 10 dias, 5 vezes maior que a média geral de diárias no hospital. 
+
+Outra análise foi a avaliação do diagnístico W038 o qual tem apenas uma ocorrência na base de dados avaliada e corresponde à causa do diagnóstico S730 de Luxacao da articulacao do quadril. Avaliando apenas o diagnóstico S730, são encontradas tendências indicadoras de complexidade semelhantes à análise do diagnóstico S720, entretanto, neste caso específico associado à causa W038 (quedas no mesmo nível causadas por colisões ou empurrões de terceiros, em locais específicos não listados de forma detalhada) o paciente permaneceu internado por 67 dias, entretanto, não é possível estabelecer uma relação de causalidade forte entre o empurrão e a quantidade de diárias, uma vez que, a causa da necessidade da cirurgia foi a luxação do quadril e não o empurrão. 
+
+As avaliações de acidente de transito (V019) e Reação anormal em paciente ou complicação tardia, causadas por intervenção cirúrgica (Y831) também foram avaliadas e a relação encontrada entre essas situações e os diagnósticos principais indicam a prevalência geral de diagnósticos mais complexos, além disso, essas situações são tratadas com maior rigor no meio médico e, portanto, não serão excluídos da análise.
+
+A implementação da avaliação de importância por meio de SHAP Values para o algoritmo de Naive Bayes é computacionalmente complexa, portanto, escolheu-se realizar a análise para os 10 diagnósticos mais comuns que representam 40% da ocorrência total de cirurgias disponíveis para a análise.
+
+Apesar de o método SHAP Values não ser ideal para a aplicação em tipos de modelos diferente de árvore, seus resultados são expostos com um grau melhor de interpretabilidade e, com isso, foi avaliado que a melhor forma de realizar essa avaliação seria por meio do método SHAP Values. 
+
+
+
+Com a avaliação de importância dos diagnósticos 
 
 # Próximas etapas
 
