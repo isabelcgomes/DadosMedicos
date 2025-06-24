@@ -215,15 +215,28 @@ As avaliações de acidente de transito (V019) e Reação anormal em paciente ou
 
 A implementação da avaliação de importância por meio de SHAP Values para o algoritmo de Naive Bayes é computacionalmente complexa, portanto, escolheu-se realizar a análise para os 10 diagnósticos mais comuns que representam 40% da ocorrência total de cirurgias disponíveis para a análise.
 
-Apesar de o método SHAP Values não ser ideal para a aplicação em tipos de modelos diferente de árvore, seus resultados são expostos com um grau melhor de interpretabilidade e, com isso, foi avaliado que a melhor forma de realizar essa avaliação seria por meio do método SHAP Values. 
+Mesmo com este recorte, os dados analisados demonstram uma importância baixa para todos os diagnósticos identificados [Figura 10](#Figura_10).
 
+[Figura_10]: imagens/shap_diagnosticos_mais_comuns.png "Análise de importância dos diagnósticos mais comuns" 
+![Figura 10](imagens/shap_diagnosticos_mais_comuns.png)
 
+Os diagnósticos encontrados são:
 
-Com a avaliação de importância dos diagnósticos 
+| CID10 | Descrição                      | 
+| -------------- | ------------------------------ |
+| N47 |  Hipertrofia do prepúcio, fimose e parafimose |
+| I839 |  Varizes dos membros inferiores sem úlcera ou inflamação |
+| D259 |  Leiomioma do útero, não especificado |
+| K808 |  Cálculos biliares que não se encaixam nas categorias mais específicas de colelitíase |
+
+Como resultados de todas essas avaliações identificou-se que a grande dispersão dos dados reduz qualquer validação de importância dos diagnósticos na permanência do paciente no hospital.
 
 # Próximas etapas
 
-- Avaliação estatística da árvore de decisão como modelo preditivo
+Para avaliações mais robustas e mais completas, as próximas etapas são:
+
+- Avaliação e limpeza dos dados
 - Avaliação de outros modelos preditivos
-- Avaliação do valor total como variável resposta
-- Avaliação de outras variáveis importantes para a predição
+- Avaliação de variáveis estatisticamente relevantes
+- Replicação das análises para o valor total como variável resposta
+- Replicação das análises para o óbito como variável resposta
