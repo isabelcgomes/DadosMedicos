@@ -33,7 +33,7 @@ Depois dessa primeira etapa, uma análise primária dos dados foi realizada com 
 
 |Nome da Coluna|Descrição|Preenchimento|Nota|
 |--------------|---------|-------------|----|
-|ANO_CMPT | Ano de processamento | todos 2015 | porque a base de dados disponibilizada é a de dados processados em 2015
+|ANO_CMPT | Ano de processamento | todos 2015 | porque a base de dados disponibilizada é a de dados processados em 2015 |
 |IDENT | Identificação do tipo da AIH | todos 1 ||
 |CAR_INT| Caráter da internação | todos vazios | |
 |SEQ_AIH5| Sequencial de longa permanência | todos vazios | |
