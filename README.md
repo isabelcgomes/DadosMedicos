@@ -247,20 +247,61 @@ Os diagnósticos mais relevantes para a previsão de dias de internação de um 
 [Figura_8]: imagens/importancia_individual_diagnostico_dias.png "Diagnósticos com maior importância para a quantidade de dias de internação do paciente" 
 ![Figura 8](imagens/importancia_individual_diagnostico_dias.png)
 
-Neste diagrama é possível identificar valores relacionados na cor vermelha como a presença de determinado diagnóstico e valores identificados como azul como a ausência de determinado diagnóstico. Neste caso, o diagnóstico com maior impacto para a quantidade de dias de internação é o diagnóstico N40 (Hiperplasia da próstata), com uma média de permanência de 4 dias e uma ocorrência com 127 dias. Esse mesmo padrão aconteceu para todos os diagnósticos descritos na [Figura 8](#Figura_8), na qual um registro "puxa" o valor de importância de um diagnóstico sem a devida generalização da análise. Para evitar esse padrão, foram selecionados os 10 diagnósticos mais comuns, que representam 40% do total de diagnósticos disponíveis no conjunto de dados. Neste caso, os diagnósticos com maior importância para a previsão da quantidade de dias de permanência do paciente no hospital estão dispostos na [Figura 9](#Figura_9).
+Neste diagrama é possível identificar valores relacionados na cor vermelha como a presença de determinado diagnóstico e valores identificados como azul como a ausência de determinado diagnóstico. Neste caso, o diagnóstico com maior impacto para a quantidade de dias de internação é o diagnóstico N40 (Hiperplasia da próstata), com uma média de permanência de 4 dias e uma ocorrência com 127 dias. Esse mesmo padrão aconteceu para a maior parte dos diagnósticos descritos na [Figura 8](#Figura_8), na qual um registro "puxa" o valor de importância de um diagnóstico sem a devida generalização da análise. Apesar disso, a redução da amostra de diagnósticos avaliados (de 70% para 40%) diminuiu muito a acurácia do modelo. Dessa forma, para evitar a prevalencia de casos individuais na explicação dos preditores do modelo, haverá uma preferência para a análise do diagrama de importâncias individuais em detrimento do diagrama de importância geral nesta análise.
 
-[Figura_9]: imagens/importancia_individual_diagnostico_dias_2.png "Diagnósticos mais comuns com maior importância para a quantidade de dias de internação do paciente" 
-![Figura 9](imagens/importancia_individual_diagnostico_dias_2.png)
+| CID10 | Quantidade média de diárias de internação| Nota |
+| ----- | ---------------------------------------- | ---- |
+|  N40  | 4 diárias em média  | uma ocorrência de 127 dias puxando a importância do diagnóstico para cima |
+|  D259  | 3 diárias em média  |   |
+|  E668  | 3 diárias em média  | uma ocorrência de 275 dias puxando a importância do diagnóstico para cima |
+|  I839  | 1 diária em média  | uma ocorrência de 152 dias puxando a importância do diagnóstico para cima |
+|  H251  | 1 diária em média  |   |
+|  Z302  | 1 diária em média  | uma ocorrência de 304 dias puxando a importância do diagnóstico para cima |
 
-Dessa forma, os diagnósticos mais importantes para a previsão da quantidade de dias de internação do paciente são:
+O diagnóstico com maior importância para a definição de diárias de internação são a hiperplasia da próstata (N40) e Câncer no útero (D259), ambos diagnósticos relacionados a casos oncológicos que necessitam de maiores cuidados e atenção médicos e, portanto, podem ser relacionados com uma maior quantidade de diárias de internação hospitalar. Adicionalmente a isso, casos de obesidade (E668) também são relacionados a uma maior quantidade de diárias de internação. O caso destacado para o diagnóstico E668 é o mesmo destacado na sessão [Óbito](#óbito).
 
-| CID10 | Descrição                      | 
-| -------------- | ------------------------------ |
-| W019 |  Queda no mesmo nível por escorregão, tropeção ou passos em falsos em local não especificado |
-| Y831 |  Reação anormal em paciente ou complicação tardia, causadas por intervenção cirúrgica com implante de uma prótese interna, sem menção de acidente durante a intervenção |
-| V091 |  Pedestre traumatizado em um acidente não-de-trânsito não especificado |
-| W038 |  quedas no mesmo nível causadas por colisões ou empurrões de terceiros, em locais específicos não listados de forma detalhada |
+Já casos como varizes (I839), cataráta (H251) e esterilização (Z302) tem relação com menor quantidade de diárias de internação hospitalar.
+
+Outros destaques na [Figura 8](#Figura_8) são os casos de hipertrofia do prepúscio (N47) com uma média de um dia de internação, hipertrofia das amígdalas (J353), com média de um dia de internação e quantidade máxima de 32 diárias e outras variantes da obesidade (E660) com média de 3 diárias de internação e quantidade máxima de 90 dias.
+
+Apesar de baixos valores absolutos de quantidade média de diárias, a média global de quantidade de diárias é de 7 dias, então valores como 3 ou 4 dias em média de diárias para esta base de dados representam entre 40 e 60% da média de diárias hospitalares.
+
+Em 2015 a pessoa que passou a maior quantidade de dias no hospital sofreu um aborto espontâneo retido (O021), e ficou 337 dias no hospital. Já a menor quantidade de diárias de internação hospitalar (0) foi de catarátas (H521) como explicado pela relação evidenciada na [Figura 8](#Figura_8).
 
 ### Valor total da operação e internação
 
-Os diagnósticos mais 
+Da mesma forma que na análise da quantidade de dias de internação, a utilização dos 10 diagnósticos mais comuns (40% da amostra) para realizar a previsão do valor total investido no paciente comprometeu o resultado do modelo em relação à utilização dos 50 diagnósticos mais comuns (70% da amostra). Por isso, para a previsão do valor total, foram utilizados os 50 diagnósticos mais comuns.
+
+Para os casos de diagnósticos com a maior representação de despesas, diferente dos casos anteriores, não foram observados casos isolados elevando uma importância, mas uma concentração maior desses resultados para a geração do valor total resultante [Figura 9](#Figura_9).
+
+[Figura_9]: imagens/importancia_individual_diagnostico_valor.png "Diagnósticos mais comuns com maior importância para o valor total investido no paciente" 
+![Figura 9](imagens/importancia_individual_diagnostico_valor.png)
+
+O diagnóstico com o tratamento mais caro é a obesidade e suas variantes (E668, E660 e E669). Já o tratamento para esterelização (Z302), Problemas de pele (L989) e hipertrofia do prepúscio (N47) foram os diagnósticos com maior importância para a redução dos valores investidos no paciente, isto é, condições com tratamentos mais baratos, estes diagnósticos representam uma média de valores investidos de:
+
+| CID10 | Média de valor total | 
+| ----- | -------------------- |
+| E668  | R$5358,86 |
+| E660  | R$5996,72 |
+| E669  | R$4883,53 |
+| Z302  | R$425,97 |
+| L989  | R$311,44 |
+| N47   | R$275,09 |
+
+A média global do valor total de internação são R$1582,49, de forma que o valor médio despendido com casos de obesidade representam de 3 a 4 vezes o valor médio utilizado para custear cirurgias eletivas, enquanto o valor máximo investido no diagnóstico de esterelização foi menos de duas vezes maior que a média global do valor total de internações.
+
+O diagnóstico com tratamento de maior valor investido pelo SUS no ano de 2015 foi de insuficiência hepática no valor de R$99868,59. Para o caso de tratamentos mais baratos, estes não tiveram muita influência do diagnóstico. O procedimento mais barato realizado em 2015 foi a de retirada de catéter no valor total de R$20,74.
+
+# Conclusão
+
+Os dados analisados, por serem dados médicos, têm uma variabilidade alta e imprevisível. Em relação à quantidade de diárias que uma pessoa tende a ficar no hospital e ao valor utilizado para custear o procedimento realizado e a quantidade de diárias, estes são mais influenciados por variáveis distintas, enquanto o procedimento realizado é importante para ambas, a complexidade tem uma importância 400 vezes maior para a explicação dos valores utilizados do que para a quantidade de diárias, enquanto, o múnicipio é mais importante (analisando relativamente) para a previsão da quantidade de diárias do que para a previsão do valor investido no tratamento do paciente.
+
+Essas relações podem ser explicadas em relação à distância do município e possibilidades de transporte gerando uma necessidade maior de diárias hospitalares para determinados municípios em relação a outros e em relação à complexidade do procedimento ter relação com os custos para sua realização, ao passo que procedimentos com complexidades discrepantes podem ter recuperações igualmente rápidas ou demoradas com a necessidade de permanências semelhantes em internação hospitalar.
+
+Em relação ao diagnóstico, pessoas com o mesmo diagnóstico podem passar por procedimentos diferentes, por exemplo, a remoção de catéter como o procedimento mais barato realizado no ano de 2015, que foi realizado em pessoas com diferentes diagnósticos, entretanto, a depender do diagnóstico, este pode depender de procedimentos mais específicos o que justifica a avaliação do diagnóstico como variável preditora tanto para valor total quanto para quantidade de diárias.
+
+Em relação ao óbito, como não foi disponibilizado um quantitativo suficiente para a amostragem, a análise realizada foi exploratória e não preditiva, demonstrando que, da mesma forma que para as demais análises, a obesidade é um diagnóstico relacionado com a morte de pacientes submetidos a procedimentos eletivos no Sistema Único de Saúde. 
+
+De todos os resultados encontrados, é possível entender que a obesidade, além de ser um diagnóstico complexo, demandando uma recuperação mais longa de pacientes, maior investimento público para o tratamento e, ainda, gera risco de vida para os pacientes com este diagnóstico, colocando este como o principal destaque desta avaliação.
+
+Para futuros estudos, é interessante avaliar causas do diagnóstico da obesidade e buscar explicações mais completas sobre este para os dispêndios do Sistema Único de Saúde e buscar estudar os locais onde mais acontecem procedimentos relacionados à obesidade buscando medidas de prevenção focadas nestas populações para reduzir a ocorrência de tratamentos e gastos com este diagnóstico.
