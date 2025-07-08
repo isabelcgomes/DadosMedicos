@@ -1,6 +1,6 @@
 # Dados Medicos
 
-Neste projeto, uma base de dados do ministério da saúde será analisada para realizar uma avaliação de quais variáveis relatadas no prontuário de cirurgias eletivas mais contribuem para a permanência do paciente no hospital, a possibilidade de morte deste e o valor utilizado para custear a cirurgia.
+Neste projeto, uma base de dados do Ministério da Saúde será analisada para realizar uma avaliação de quais variáveis relatadas no prontuário de cirurgias eletivas mais contribuem para a permanência do paciente no hospital, a possibilidade de morte deste e o valor utilizado para custear a cirurgia.
 
 # Autores
 1. Isabel Caroline Gomes Giannecchini
@@ -9,7 +9,7 @@ Neste projeto, uma base de dados do ministério da saúde será analisada para r
 
 # Tratamento
 
-Nesta análise, primeiro foi realizado um tratamento dos dados para a escolha das variáveis mais relevantes para a análise. A primeira remoção de variáveis foram aquelas que, de acordo com o dicionário de dados disponibilizado pelo ministério estavam vazias ou desatualizadas, são estas:
+Nesta etapa, foi realizado o tratamento dos dados para selecionar as variáveis mais relevantes para a análise. A primeira remoção de variáveis foram aquelas que, de acordo com o dicionário de dados disponibilizado pelo Ministério estavam vazias ou desatualizadas, são estas:
 
 - UTI_MES_IN
 - UTI_MES_AN
@@ -33,7 +33,7 @@ Nesta análise, primeiro foi realizado um tratamento dos dados para a escolha da
 - TOT_PT_SP
 - CPF_AUT
 
-Com a remoção destas variáveis, foram analisadas as variáveis com valor igual em todos os registros, uma vez que essa informação se trataria de um filtro e não uma informação que acrescenta valor à análise. Dessa forma, as colunas removidas sob esse critério foram:
+Com a remoção destas variáveis, foram analisadas as variáveis com valor igual em todos os registros, uma vez que essa informação constitui um filtro e não acrescenta valor à análise. Dessa forma, as colunas removidas sob esse critério foram:
 
 |Nome da Coluna|Descrição|Preenchimento|Nota|
 |--------------|---------|-------------|----|
@@ -58,7 +58,7 @@ Com a remoção destas variáveis, foram analisadas as variáveis com valor igua
 | TPDISEC8 | Tipo de diagnóstico secundário 8 | todos 0 | |
 | TPDISEC9 | Tipo de diagnóstico secundário 9 | todos 0 | |
 
-Por fim, foram removidas as colunas de identificação do prontuário e colunas redundantes porque estas trazem informações que não contribuem para a análise e aumentam a dimensionalidade dos dados analisados, essas colunas são, entretanto, úteis para uma identificação e validação a posteriori dos resultados. As colunas removidas neste critério são:
+Por fim, foram removidas as colunas de identificação do prontuário e colunas redundantes, pois não agregam valor à análise e aumentam a dimensionalidade dos dados. Essas colunas, entretanto, são úteis para uma identificação e validação a posterior dos resultados. As colunas removidas neste critério são:
 
 |Nome da Coluna|Descrição|
 |--------------|---------|
@@ -150,12 +150,11 @@ As colunas mantidas e selecionadas para a avaliação foram:
 
 # Avaliação dos problemas
 
-Para cada problema os diagnósticos foram avaliados em separado das demais variáveis preditoras. Isso porque, por se tratar de uma variável em texto, houve a necessidade de realizar um procedimento adicional para ser possível a avaliação da importância de cada diagnóstico na previsão da quantidade de diárias que um paciente permaneceu no hospital, na ocorrência ou não de morte e na previsão de orçamento para o tratamento deste paciente, esse procedimento e a análise realizada quanto à importância de cada diagnóstico será apreciada na sessão 
-[Diagnóstico](#diagnóstico)
+Para cada problema, os diagnósticos foram avaliados separadamente das demais variáveis preditoras. Isso porque, por se tratar de uma variável em texto, houve a necessidade de realizar um procedimento adicional para possibilitar a avaliação da importância de cada diagnóstico na previsão da quantidade de diárias que um paciente permaneceu no hospital, na ocorrência ou não de morte e na previsão de orçamento para o tratamento desse paciente. Esse procedimento e a análise realizada quanto à importância de cada diagnóstico serão apresentados na sessão [Diagnóstico](#diagnóstico)
 
 ## Quantidade de dias de internação
 
-O problema da quantidade de dias do paciente em internação trata-se de um problema de classificação em múltiplas classes. Isso se dá porque, o valor, em dias, adotado pelo ministério da saúde para registro dessa variável não é contínuo, e sim uma variável categórica que representa a quantidade de dias de permanência de um paciente no hospital (arredondada para cima), de forma que, se um paciente ficou 3 dias e 5 horas no hospital, no prontuário o registro será de 4 dias.
+O problema da quantidade de dias do paciente em internação configura-se como uma tarefa de classificação em múltiplas classes. Isso se dá porque o valor, em dias, adotado pelo Ministério da Saúde para o registro dessa variável não é contínuo, mas sim uma variável categórica que representa a quantidade de dias de permanência de um paciente no hospital (arredondada para cima), de forma que, se um paciente permanece 3 dias e 5 horas no hospital, o prontuário registrará 4 dias.
 
 Dessa forma, foram analisados modelos de classificação para a apreciação do problema e, com base nos resultados de acurácia e precisão encontrados, o modelo com a melhor performance foi o Naive Bayes, modelo de classificação baseado no método bayesiano de probabilidade e estatística, com uma acurácia próxima a 60% no acerto da quantidade de dias de internação de um paciente no hospital com base nas variáveis avaliadas [Figura 1](#Figura_1).
 
@@ -173,19 +172,19 @@ Para a avaliação deste problema também foi utilizado o método Naive Bayes de
 [Figura_2]: imagens/GNB_obito.png "Acurácia do método Gaussian Naive Bayes para o problema de óbito" 
 ![Figura 2](imagens/GNB_obito.png)
 
-Esse resultado, entretanto, não é mérito do modelo e sim da baixa ocorrência de óbitos em cirurgias eletivas registrada na base de dados disponibilizada. Com uma prevalência de 0,12% de registros com óbito, o modelo não contou com dados balanceados para a realização desta análise. Não foram utilizadas técnicas para realizar o balanceamento da amostra por se tratarem de dados médicos, como estes dados são registros objetivos de procedimentos eletivos realizados, a implementação de qualquer técnica de balanceamento contribuiria para a inserção de viéses na amostra prejudicando o modelo ainda que entregando uma melhor eficácia numérica para sua previsão. Dadas essas avaliações, o problema de óbitos não foi apreciado nas demais partes desta avaliação, entretanto, foi realizada uma análise exploratória nos registros de pacientes em óbito.
+Esse resultado, entretanto, não é mérito do modelo e sim da baixa ocorrência de óbitos em cirurgias eletivas registrada na base de dados disponibilizada. Com uma prevalência de 0,12% de registros com óbito, o modelo não contou com dados balanceados para a realização da análise. Não foram utilizadas técnicas para realizar o balanceamento da amostra por se tratarem de dados médicos, como estes dados são registros objetivos de procedimentos eletivos realizados, a implementação de qualquer técnica de balanceamento contribuiria para a inserção de viéses na amostra prejudicando o modelo ainda que entregando uma melhor eficácia numérica para sua previsão. Dadas essas avaliações, o problema de óbitos não foi apreciado nas demais partes desta avaliação, entretanto, foi realizada uma análise exploratória nos registros de pacientes em óbito.
 
 ### Análise exploratória dos registros de pacientes em óbito
 
-Em relação aos registros de óbito, os pacientes nesta condição permaneceram uma média de 8 dias em internação e quantidade máxima de dias que um paciente ficou internado antes de ir a óbito foram 275 dias. Nesta ocorrência, a paciente era uma mulher de 65 anos, foi diagnosticado com obesidade e foi submetido ao procedimento de "GASTRECTOMIA VERTICAL EM MANGA (SLEEVE)", cirurgia bariátrica do tipo Sleeve, o procedimento representou o valor de R$11676,40. 
+Em relação aos registros de óbito, os pacientes nesta condição permaneceram em média 8 dias internados, sendo qua a quantidade máxima de dias de internação antes de ir a óbito foi 275 dias. Nesta ocorrência, a paciente era uma mulher de 65 anos, diagnosticada com obesidade, submetida ao procedimento de "GASTRECTOMIA VERTICAL EM MANGA (SLEEVE)", cirurgia bariátrica do tipo Sleeve. O procedimento representou um custo de R$11676,40. 
 
-De todos os óbitos, o diagnóstico mais comum para o caso de óbitos é o diagnóstico de pedra na vesícula e suas variações com 38 ocorrências dentre os óbitos registrados, demonstrando uma prevalência de 13% nos registros de óbito em cirurgias eletivas, por fim, o procedimento realizado com maior prevalência de óbitos foi a "LAPAROTOMIA EXPLORADORA". 
+Entre os registros de óbito, o diagnóstico mais comum foi o de pedra na vesícula e suas variações, com 38 ocorrências, representando uma prevalência de 13% em cirurgias eletivas. Por fim, o procedimento realizado com maior prevalência de óbitos foi a "LAPAROTOMIA EXPLORADORA". 
 
-Por fim, a idade média dos pacientes é de 58 anos, indicando um maior risco de falecimento na realização de cirurgias em pessoas com idade mais avançada. Dentre os pacientes que foram a óbito em idade menor que 58 anos, o diagnóstico com maior prevalência foi dor abdominal com 16 ocorrências neste grupo e o procedimento realizado com maior prevalência de óbitos foi a "LAPAROTOMIA EXPLORADORA" para este grupo, da mesma forma que no caso geral de pacientes em óbito.
+Tratando-se da idade, a média entre os pacientes que foram a óbito é de 58 anos, indicando um maior risco de falecimento na realização de cirurgias em pessoas com idade mais avançada. Entre os pacientes que foram a óbito com menos de 58 anos, o diagnóstico com maior prevalência foi dor abdominal, com 16 ocorrências, e o procedimento com maior prevalência de óbitos foi a "LAPAROTOMIA EXPLORADORA", da mesma forma que no caso geral de pacientes que evoluíram a óbito.
 
 ## Valor total da operação e internação
 
-Já o problema do valor, em reais, utilizado para custear a internação e operação do paciente é um problema de regressão, uma vez que a variável resposta é um valor numérico contínuo. Para este caso, o modelo escolhido para a apreciação foi a Árvore de Decisão em virtude da natureza das variáveis preditoras disponíveis na base de dados analisada, com um coeficiente de determinação de 70% [Figura 3](#Figura_3).
+Já o problema do valor, em reais, utilizado para custear a internação e operação do paciente configura-se como um problema de regressão, uma vez que a variável resposta é um valor numérico contínuo. Para este caso, o modelo escolhido para a análise foi a Árvore de Decisão, em virtude da natureza das variáveis preditoras disponíveis na base de dados analisada, apresentando um coeficiente de determinação de 70% [Figura 3](#Figura_3).
 
 
 [Figura_3]: imagens/DT_val.png "Coeficiente de determinação para o problema de previsão do valor utilizado para custeio do procedimento e internação do paciente" 
@@ -194,7 +193,7 @@ Já o problema do valor, em reais, utilizado para custear a internação e opera
 
 # Avaliação das variáveis preditoras
 
-Mais importante do que avaliar a acurácia de um modelo na previsão de uma variável é identificar como as variáveis utilizadas por esse modelo na previsão influenciam o resultado do modelo aplicado. Para isso, foi utilizado um método de avaliação de importância derivado da teoria dos jogos chamado _SHapley Additive exPlanations_ - SHAP. Este método decompõe a previsão de um modelo nas contribuições de cada variável e, com isso, permite uma interpretabilidade global e local da importância de uma variável para uma previsão e como ela influencia previsões individuais.
+Mais importante do que avaliar a acurácia de um modelo na previsão de uma variável é identificar como as variáveis utilizadas por esse modelo influenciam o resultado gerado. Para isso, foi utilizado um método de avaliação de importância derivado da teoria dos jogos, denominado _SHapley Additive exPlanations_ (SHAP). Este método decompõe a previsão de um modelo nas contribuições de cada variável e, com isso, permite uma interpretabilidade global e local da importância de cada variável e como ela influencia previsões individuais.
 
 ## Quantidade de dias de internação
 
@@ -203,16 +202,16 @@ Para a quantidade de dias de internação, as variáveis mais importantes para a
 [Figura_4]: imagens/importancia_geral_dias.png "Importância geral para previsão da quantidade de dias de internação" 
 ![Figura 4](imagens/importancia_geral_dias.png)
 
-Este diagrama mostra que as variáveis com mais impacto na permanência de um paciente no hospital são o procedimento realizado seguido pela localidade do hospital onde foi realizada a cirurgia, e o local de residência do paciente, seguidos, em menor importância, pelo código de registro do hospital, complexidade do procedimento realizado, idade e sexo do paciente.  
+Este diagrama mostra que as variáveis com mais impacto na permanência de um paciente no hospital são, em ordem de importância, o procedimento realizado, a localidade do hospital onde a cirurgia foi realizada e o local de residência do paciente. Em seguida, com menor impacto, destacam-se o código de registro do hospital, a complexidade do procedimento realizado, a idade e o sexo do paciente.  
 
 O comportamento das importâncias individuais pode ser avaliado na [Figura 5](#Figura_5).
 
 [Figura_5]: imagens/importancia_individual_dias.png "Importância individual para previsão da quantidade de dias de internação" 
 ![Figura 5](imagens/importancia_individual_dias.png)
 
-Esse diagrama permite a visualização da manifestação de importância no espectro de valores de cada variável. Como exemplo, de acordo com o apresentado neste diagrama, complexidades com valores menores tiveram impacto negativo na quantidade de dias de permanência do paciente no hospital, enquanto valores altos de complexidade impactaram tanto positivamente quanto negativamente a quantidade de dias de permanência do paciente no hospital. Com isso em mente, é possível perceber que pacientes do sexo masculino (01) permaneceram mais dias do que pacientes do sexo feminino (03) no hospital, haja vista que, de acordo com o diagrama, para a variável sexo, valores menores tiveram um impacto mais positivo na quantidade de diárias do paciente no hospital. Da mesma forma que idades mais elevadas tiveram importâncias maiores na quantidade de dias do paciente no hospital, e idades mais baixas tiveram impacto negativo na permanência do paciente no hospital. 
+Esse diagrama permite a visualização da manifestação de importância no espectro de valores de cada variável. Como exemplo, de acordo com o diagrama, valores mais baixos de complexidade tiveram impacto negativo na quantidade de dias de permanência do paciente no hospital, enquanto valores mais elevados de complexidade impactaram tanto positivamente quanto negativamente essa variável. A partir dessa análise, é possível perceber que pacientes do sexo masculino (01) permaneceram no hospital mais dias do que pacientes do sexo feminino (03), haja vista que, de acordo com o diagrama, para a variável sexo, valores menores tiveram um impacto mais positivo na quantidade de diárias do paciente no hospital. De modo semelhante, idades mais elevadas tiveram importâncias maiores na quantidade de dias do paciente no hospital, enquanto idades mais baixas apresentaram impacto negativo na permanência do paciente no hospital. 
 
-Em relação ao procedimento realizado, localização do hospital e local de moradia do paciente e código do hospital a relação demonstrada por este diagrama não pode ser analisada diretamente em quantidade porque, apesar de serem valores numéricos, são variáveis identificadoras e não representam uma relação de precedência entre seus valores, de forma que, é possível indicar que estas variáveis contribuem, de forma geral, para a quantidade de diárias de um paciente no hospital [(Figura 4)](#Figura_4), entretanto, a relação entre cada valor destas variáveis não é suficiente para representar sua importância na quantidade de diárias do paciente.
+Em relação ao procedimento realizado, à localização do hospital, ao local de moradia do paciente e ao código do hospital, a relação demonstrada por este diagrama não pode ser analisada diretamente em termos de quantidade. Isso ocorre porque, apesar de serem expressas em valores numéricos, essa variáveis são identificadoras e não representam uma relação de precedência entre seus valores. Assim, é possível indicar que estas variáveis contribuem, de forma geral, para a quantidade de diárias de um paciente no hospital [(Figura 4)](#Figura_4), entretanto, a relação entre cada valor destas variáveis não é suficiente para representar sua importância na quantidade de diárias.
 
 ## Valor total da operação e internação
 
@@ -221,17 +220,17 @@ Para o valor investido no paciente, a relação de importância das variáveis n
 [Figura_6]: imagens/importancia_geral_valor.png "Importância geral para previsão do valor investido no paciente" 
 ![Figura 6](imagens/importancia_geral_valor.png)
 
-De acordo com este diagrama, a complexidade da operação e o procedimento realizado têm uma importancia, em média, quatro vezes maior que as demais variáveis para a previsão do valor investido no paciente, indicando que complexidades maiores podem representar custos maiores para operações enquanto complexidades menores representam custos menos elevados e, em relação aos procedimentos, pode existir uma série de procedimentos que representam custos mais elevados para o Sistema Único de Saúde do que outros. 
+De acordo com este diagrama, a complexidade da operação e o procedimento realizado têm uma importância, em média, quatro vezes maior que as demais variáveis para a previsão do valor investido no paciente, indicando que complexidades maiores podem representar custos maiores para operações, enquanto complexidades menores representam custos menos elevados. Em relação aos procedimentos, pode existir uma série de procedimentos que representam custos mais elevados para o Sistema Único de Saúde do que outros. 
 
-A localidade do paciente e do hospital também representam importâncias relevantes na previsão do valor investido no paciente, entretanto, esta importância pode ser explicada por questões economicas locais em detrimento de questões médicas. Um custo maior de uma operação em determinado local pode estar mais relacionado à logística necessária para a entrega de materiais necessários para a sua realização e ao valor salarial da equipe em determinadas localidades. 
+A localidade do paciente e do hospital também representam importâncias relevantes na previsão do valor investido no paciente, entretanto, essa importância pode ser explicada por questões econômicas locais, em detrimento de fatores médicos. Um custo mais elevado de uma operação em determinado local pode estar mais relacionado à logística necessária para a entrega de materiais necessários para a sua realização e ao valor salarial da equipe nessas localidades. 
 
-Já idade e sexo do paciente representam importâncias menores para a previsão do investimento necessário ao tratamento do paciente, juntamente com a categoria do hospital.
+Já idade e sexo do paciente representam importâncias menores para a previsão do investimento necessário ao tratamento, juntamente com a categoria do hospital.
 
 ## Diagnóstico
 
-Em relação aos diagnósticos, como apresentado na seção [Avaliação dos problemas](#avaliação-dos-problemas), estes foram analisados a parte das demais variáveis para verificar a importância destes na previsão da quantidade de dias de permanência no hospital e no valor total investido no paciente. Essa separação aconteceu em virtude das características da variável diagnóstico, além de serem variáveis textuais, o que gera a demanda de um processo de tokenização para a interpretação destas pelo modelo de previsão utilizado para a análise, existem ramificações diferentes dos diagnósticos, gerando uma dispersão maior nesses dados reduzindo a importância individual relativa de cada uma dessas ocorrências em relação às outras variáveis, fazendo com que, em comparação com as demais, os diagnósticos não tenham relevância para a análise.
+Em relação aos diagnósticos, como apresentado na seção [Avaliação dos problemas](#avaliação-dos-problemas), estes foram analisados separadamente das demais variáveis para verificar sua importância na previsão da quantidade de dias de permanência no hospital e no valor total investido no paciente. Essa separação ocorreu em virtude das características da variável diagnóstico, além de serem variáveis textuais, o que demanda um processo de tokenização para sua interpretação pelo modelo de previsão utilizado. Além disso, os diagnósticos apresentam diversas ramificações, o que gera maior dispersão nos dados e reduz a importância relativa de cada ocorrência individual quando comparada às demais variáveis. Dessa forma, em termos relativos, os diagnósticos não apresentaram relevância para a análise.
 
-Para a avaliação, primeiro foram unificados os diagnósticos em cada classificação (principal e secundários). Entretanto, o resultado encontrado prezava mais pelas situações causadoras do que pelos diagnósticos em si [Figura 7](#Figura_7).
+Para a avaliação, primeiramente foram unificados os diagnósticos em cada classificação (principal e secundários). Entretanto, o resultado encontrado refletiu  mais as situações causadoras do que os diagnósticos em si [Figura 7](#Figura_7).
 
 [Figura_7]: imagens/shap_diagnosticos.png "Situações com maior importância para a quantidade de dias de internação do paciente" 
 ![Figura 7](imagens/shap_diagnosticos.png)
@@ -243,7 +242,7 @@ Para a avaliação, primeiro foram unificados os diagnósticos em cada classific
 | V091 |  Pedestre traumatizado em um acidente não-de-trânsito não especificado |
 | W038 |  quedas no mesmo nível causadas por colisões ou empurrões de terceiros, em locais específicos não listados de forma detalhada |
 
-Dentro dessa análise, foram encontradas situações extremas e específicas, que não permitiam a generalização dos resultados encontrados, como, por exemplo, o diagnóstico de fratura no quadril, no qual o paciente permaneceu no hospital por 67 dias, dez vezes mais do que a média de diárias de internação geral da base de dados disponível. Por isso, a análise dos diagnósticos foi restrita ao caso dos diagnósticos principais, que não contam com as situações que geraram os diagnósticos do paciente.
+Dentro dessa análise, foram encontradas situações extremas e específicas que não permitiam a generalização dos resultados, como, por exemplo, o diagnóstico de fratura no quadril, em que o paciente permaneceu no hospital por 67 dias, dez vezes mais do que a média de diárias de internação geral da base de dados disponível. Por esse motivo, a análise dos diagnósticos foi restrita ao caso dos diagnósticos principais, que não incluem as situações que geraram os diagnósticos do paciente.
 
 ### Quantidade de dias de internação
 
@@ -263,26 +262,26 @@ Neste diagrama é possível identificar valores relacionados na cor vermelha com
 |  H251  | 1 diária em média  |   |
 |  Z302  | 1 diária em média  | uma ocorrência de 304 dias puxando a importância do diagnóstico para cima |
 
-O diagnóstico com maior importância para a definição de diárias de internação são a hiperplasia da próstata (N40) e Câncer no útero (D259), ambos diagnósticos relacionados a casos oncológicos que necessitam de maiores cuidados e atenção médicos e, portanto, podem ser relacionados com uma maior quantidade de diárias de internação hospitalar. Adicionalmente a isso, casos de obesidade (E668) também são relacionados a uma maior quantidade de diárias de internação. O caso destacado para o diagnóstico E668 é o mesmo destacado na sessão [Óbito](#óbito).
+Os diagnósticos com maior importância para a definição da quantidade de diárias de internação são a hiperplasia da próstata (N40) e Câncer no útero (D259), ambos relacionados a casos oncológicos que demandam maiores cuidados e atenção médica e, portanto, podem estar associados a um maior número de diárias de internação hospitalar. Adicionalmente, casos de obesidade (E668) também se relacionam a uma maior quantidade de diárias de internação, sendo que o caso destacado para o diagnóstico E668 é o mesmo destacado na sessão [Óbito](#óbito).
 
-Já casos como varizes (I839), cataráta (H251) e esterilização (Z302) tem relação com menor quantidade de diárias de internação hospitalar.
+Já casos como varizes (I839), cataráta (H251) e esterilização (Z302) estão associados a uma menor quantidade de diárias de internação hospitalar.
 
-Outros destaques na [Figura 8](#Figura_8) são os casos de hipertrofia do prepúscio (N47) com uma média de um dia de internação, hipertrofia das amígdalas (J353), com média de um dia de internação e quantidade máxima de 32 diárias e outras variantes da obesidade (E660) com média de 3 diárias de internação e quantidade máxima de 90 dias.
+Outros destaques na [Figura 8](#Figura_8) são os casos de hipertrofia do prepúscio (N47), com média de um dia de internação; hipertrofia das amígdalas (J353), com média de um dia e quantidade máxima de 32 diárias; e outras variantes da obesidade (E660), com média de 3 diárias de internação e quantidade máxima de 90 dias.
 
-Apesar de baixos valores absolutos de quantidade média de diárias, a média global de quantidade de diárias é de 7 dias, então valores como 3 ou 4 dias em média de diárias para esta base de dados representam entre 40 e 60% da média de diárias hospitalares.
+Apesar dos baixos valores absolutos de dias de internação, a média global de quantidade de diárias hospitalares nesta base de dados é de 7 dias. Assim, valores como 3 ou 4 dias de internação representam entre 40 e 60% da média dessa média.
 
-Em 2015 a pessoa que passou a maior quantidade de dias no hospital sofreu um aborto espontâneo retido (O021), e ficou 337 dias no hospital. Já a menor quantidade de diárias de internação hospitalar (0) foi de catarátas (H521) como explicado pela relação evidenciada na [Figura 8](#Figura_8).
+Em 2015, a pessoa que permaneceu a maior quantidade de dias no hospital apresentou diagnóstico de aborto espontâneo retido (O021), permanecendo internada por 337 dias. Já o menor número de diárias de internação hospitalar (0) ocorreu em casos de cataráta (H521), conforme evidenciado na [Figura 8](#Figura_8).
 
 ### Valor total da operação e internação
 
-Da mesma forma que na análise da quantidade de dias de internação, a utilização dos 10 diagnósticos mais comuns (40% da amostra) para realizar a previsão do valor total investido no paciente comprometeu o resultado do modelo em relação à utilização dos 50 diagnósticos mais comuns (70% da amostra). Por isso, para a previsão do valor total, foram utilizados os 50 diagnósticos mais comuns.
+Da mesma forma que na análise da quantidade de dias de internação, a utilização dos 10 diagnósticos mais comuns (40% da amostra) para prever o valor total investido no paciente comprometeu o desempenho do modelo em relação à utilização dos 50 diagnósticos mais comuns (70% da amostra). Por esse motivo, para a previsão do valor total, foram utilizados os 50 diagnósticos mais comuns.
 
-Para os casos de diagnósticos com a maior representação de despesas, diferente dos casos anteriores, não foram observados casos isolados elevando uma importância, mas uma concentração maior desses resultados para a geração do valor total resultante [Figura 9](#Figura_9).
+Para os casos de diagnósticos com a maior representação de despesas, diferentemente das análises anteriores, não foram observados casos isolados com importância elevada, mas sim uma maior concentração desses resultados na composição do valor total resultante [Figura 9](#Figura_9).
 
 [Figura_9]: imagens/importancia_individual_diagnostico_valor.png "Diagnósticos mais comuns com maior importância para o valor total investido no paciente" 
 ![Figura 9](imagens/importancia_individual_diagnostico_valor.png)
 
-O diagnóstico com o tratamento mais caro é a obesidade e suas variantes (E668, E660 e E669). Já o tratamento para esterelização (Z302), Problemas de pele (L989) e hipertrofia do prepúscio (N47) foram os diagnósticos com maior importância para a redução dos valores investidos no paciente, isto é, condições com tratamentos mais baratos, estes diagnósticos representam uma média de valores investidos de:
+O diagnóstico com o tratamento mais caro é a obesidade e suas variantes (E668, E660 e E669). Já o tratamento para esterelização (Z302), problemas de pele (L989) e hipertrofia do prepúscio (N47) estão entre os diagnósticos com maior importância para a redução dos valores investidos no paciente, isto é, condições com tratamentos de menor custo. Esses diagnósticos apresentam a seguinte média de valores investidos:
 
 | CID10 | Média de valor total | 
 | ----- | -------------------- |
@@ -293,20 +292,20 @@ O diagnóstico com o tratamento mais caro é a obesidade e suas variantes (E668,
 | L989  | R$311,44 |
 | N47   | R$275,09 |
 
-A média global do valor total de internação são R$1582,49, de forma que o valor médio despendido com casos de obesidade representam de 3 a 4 vezes o valor médio utilizado para custear cirurgias eletivas, enquanto o valor máximo investido no diagnóstico de esterelização foi menos de duas vezes maior que a média global do valor total de internações.
+A média global do valor total de internação é de R$1582,49, de forma que o valor médio despendido com casos de obesidade representa de 3 a 4 vezes o valor médio utilizado para custear cirurgias eletivas, enquanto o valor máximo investido no diagnóstico de esterelização foi menos de duas vezes maior que a média global.
 
-O diagnóstico com tratamento de maior valor investido pelo SUS no ano de 2015 foi de insuficiência hepática no valor de R$99868,59. Para o caso de tratamentos mais baratos, estes não tiveram muita influência do diagnóstico. O procedimento mais barato realizado em 2015 foi a de retirada de catéter no valor total de R$20,74.
+O diagnóstico com tratamento de maior valor investido pelo SUS no ano de 2015 foi de insuficiência hepática, no montante de R$99868,59. Já nos casos de tratamentos mais baratos, o diagnótico não exerceu grande influência no valor do procedimento. O procedimento de menor custo realizado em 2015 foi a retirada de catéter, com valor total de R$20,74.
 
 # Conclusão
 
-Os dados analisados, por serem dados médicos, têm uma variabilidade alta e imprevisível. Em relação à quantidade de diárias que uma pessoa tende a ficar no hospital e ao valor utilizado para custear o procedimento realizado e a quantidade de diárias, estes são mais influenciados por variáveis distintas, enquanto o procedimento realizado é importante para ambas, a complexidade tem uma importância 400 vezes maior para a explicação dos valores utilizados do que para a quantidade de diárias, enquanto, o múnicipio é mais importante (analisando relativamente) para a previsão da quantidade de diárias do que para a previsão do valor investido no tratamento do paciente.
+Os dados analisados, por se tratarem de dados médicos, apresentam alta variabilidade e imprevisibilidade. Em relação à quantidade de diárias que uma pessoa tende a permanecer no hospital e ao valor utilizado para custear o procedimento realizado e as diárias, observa-se que esses indicadores são influenciados por variáveis distintas. Enquanto o procedimento realizado é relevante para ambas as análises, a complexidade do procedimento tem uma importância cerca de 400 vezes maior para a explicação dos valores utilizados do que para a quantidade de diárias. Por outro lado, o município de residênia do paciente possui maior relevância, em termos relativos, para a previsão da quantidade de diárias do que para a previsão do valor investido no tratamento do paciente.
 
-Essas relações podem ser explicadas em relação à distância do município e possibilidades de transporte gerando uma necessidade maior de diárias hospitalares para determinados municípios em relação a outros e em relação à complexidade do procedimento ter relação com os custos para sua realização, ao passo que procedimentos com complexidades discrepantes podem ter recuperações igualmente rápidas ou demoradas com a necessidade de permanências semelhantes em internação hospitalar.
+Essas relações podem ser explicadas pela distância entre o município e o hospital, bem como pelas possibilidades de transporte disponíveis, que podem gerar a necessidade mais diárias hospitalares para determinados municípios em comparação a outros. Além disso, a complexidade do procedimento está relacionada aos custos para sua realização, ao passo que procedimentos com diferentes complexidades podem demandar tempos de recuperação semelhantes, resultando em quantidades próximas de dias de internação.
 
-Em relação ao diagnóstico, pessoas com o mesmo diagnóstico podem passar por procedimentos diferentes, por exemplo, a remoção de catéter como o procedimento mais barato realizado no ano de 2015, que foi realizado em pessoas com diferentes diagnósticos, entretanto, a depender do diagnóstico, este pode depender de procedimentos mais específicos o que justifica a avaliação do diagnóstico como variável preditora tanto para valor total quanto para quantidade de diárias.
+Em relação ao diagnóstico, pacientes com o mesmo diagnóstico podem ser submetidos a procedimentos distintos. Por exemplo, a remoção de catéter, o procedimento de menor custo realizado em 2015, foi realizada em pacientes com diferentes diagnósticos. Entretanto, a depender do diagnóstico, pode haver a necessidade de procedimentos mais específicos, o que justifica a avaliação do diagnóstico como variável preditora tanto para o valor total quanto a para quantidade de diárias.
 
-Em relação ao óbito, como não foi disponibilizado um quantitativo suficiente para a amostragem, a análise realizada foi exploratória e não preditiva, demonstrando que, da mesma forma que para as demais análises, a obesidade é um diagnóstico relacionado com a morte de pacientes submetidos a procedimentos eletivos no Sistema Único de Saúde. 
+No que diz respeito ao óbito, como não havia um quantitativo suficiente de registros para uma análise preditiva, optou-se por realizar uma análise exploratória. Essa análise demonstrou que, assim como nas demais análises, a obesidade é um diagnóstico associado ao óbito de pacientes submetidos a procedimentos eletivos no Sistema Único de Saúde. 
 
-De todos os resultados encontrados, é possível entender que a obesidade, além de ser um diagnóstico complexo, demandando uma recuperação mais longa de pacientes, maior investimento público para o tratamento e, ainda, gera risco de vida para os pacientes com este diagnóstico, colocando este como o principal destaque desta avaliação.
+Dentre os resultados encontrados, destaca-se que a obesidade, além de ser um diagnóstico complexo que demanda recuperação mais longa e maior investimento público para o tratamento, também representa um fator de risco para a vida dos pacientes, configurando-se como o principal destaque desta avaliação.
 
-Para futuros estudos, é interessante avaliar causas do diagnóstico da obesidade e buscar explicações mais completas sobre este para os dispêndios do Sistema Único de Saúde e buscar estudar os locais onde mais acontecem procedimentos relacionados à obesidade buscando medidas de prevenção focadas nestas populações para reduzir a ocorrência de tratamentos e gastos com este diagnóstico.
+Para futuros estudos, recomenda-se avaliar as causas do diagnóstico de obesidade e buscar explicações mais abrangentes sobre os dispêndios do Sistema Único de Saúde relacionados a esse diagnóstico. Além disso, é relevante identificar com maior incidência de procedimentos relacionados à obesidade, de forma a orientar medidas de prevenção voltadas a essas populações, visando reduzir a necessidade de tratamentos e os gastos associados a esse diagnóstico.
