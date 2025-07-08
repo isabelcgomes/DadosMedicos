@@ -3,9 +3,9 @@
 Neste projeto, uma base de dados do ministério da saúde será analisada para realizar uma avaliação de quais variáveis relatadas no prontuário de cirurgias eletivas mais contribuem para a permanência do paciente no hospital, a possibilidade de morte deste e o valor utilizado para custear a cirurgia.
 
 # Autores
-Isabel Caroline Gomes Giannecchini
-Arthis Vanderline
-Maria do Socorro
+1. Isabel Caroline Gomes Giannecchini
+2. Maria do Socorro
+3. Arthur Vanderline
 
 # Tratamento
 
