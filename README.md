@@ -5,7 +5,7 @@ Neste projeto, uma base de dados do ministério da saúde será analisada para r
 # Autores
 1. Isabel Caroline Gomes Giannecchini
 2. Maria do Socorro
-3. Arthur Vanderline
+3. Artur Santana Guedes Vanderlinde
 
 # Tratamento
 
